@@ -1,9 +1,9 @@
 ---
-description: Generate an English PARRUG prompt for an autonomous orchestrator session. The generated prompt runs internal subagent loops by default; output copy-paste worker prompt packs only when explicitly requested.
-argument-hint: "<slug> -- <topic or task brief>"
+description: Apply the PARRUG gate-green work protocol to a non-trivial task. Produces a handoff or restart prompt only when explicitly requested.
+argument-hint: "<task brief>"
 ---
 
-# /parrug - Autonomous Loop Prompt Generator
+# /parrug - Gate-Green Work Protocol
 
 Read the installed skill SoT first:
 
@@ -11,13 +11,12 @@ Read the installed skill SoT first:
 SKILL.md
 ```
 
-Use it as binding behavior. This command generates a new session prompt; it does
-not execute the described target task.
+Use it as binding behavior.
 
 ## Invocation
 
 ```text
-/parrug <slug> -- <topic or task brief>
+/parrug <task brief>
 ```
 
 Arguments from the user:
@@ -26,31 +25,42 @@ Arguments from the user:
 $ARGUMENTS
 ```
 
-Parse all text before `--` as the slug phrase and normalize it to kebab-case.
-Parse everything after `--` as the brief. If the slug or brief is missing, ask
-for the missing part and stop.
+Treat the arguments as the task brief unless the user explicitly asks for a
+prompt, prompt pack, handoff, restart prompt, or copy-paste artifact.
 
-## Boundary While Generating
+## Default Behavior
 
-Follow `SKILL.md` exactly. In particular:
+Run the current task through PARRUG:
 
-- default to one autonomous orchestrator-session prompt;
-- include internal research, planning, execution, review, and refinement
-  subagent loops in that generated prompt;
-- do not output worker prompt packs unless the user explicitly asks for
-  copy-paste worker prompts;
-- do not execute the target task in this `/parrug` command.
+```text
+Plan -> Act -> Review -> Refine -> Until Gate-Green
+```
 
-## Output
+Use available Superpowers skills and real worker/subagent tooling when they fit
+the task. Do not expose raw worker prompts or raw reviewer output. If the
+runtime lacks a required worker/subagent capability, report the tooling blocker
+instead of pretending workers ran.
 
-Return one English, copy-paste-ready autonomous orchestrator prompt based on:
+## Handoff Prompt Behavior
+
+Only when explicitly requested, produce a copy-paste-ready English handoff prompt
+based on:
 
 - `templates/session-prompt.md`;
 - `references/foundations.md`;
-- the user's slug and brief;
+- the user's task brief;
 - verified local or current-source facts needed to make the prompt safe.
 
-The generated prompt must include role boundary, scope, non-goals, context to
-read, allowed and forbidden actions, internal subagent loop phases, gate-green
-criteria, bounded refinement budget, stop rules, Manual-Burden Check, and final
-output contract.
+In that mode, output the prompt in chat by default and do not execute the target
+task unless the user separately asks for execution.
+
+## Output
+
+For normal work, return the integrated result only:
+
+1. **Current Decision**
+2. **What Was Checked**
+3. **Integrated Result**
+4. **Evidence**
+5. **Open Questions**
+6. **Next Action or Blocker**
