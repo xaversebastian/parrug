@@ -1,66 +1,43 @@
 ---
-description: Apply the PARRUG gate-green work protocol to a non-trivial task. Produces a handoff or restart prompt only when explicitly requested.
+description: Apply the PARRUG gate-green work protocol to a non-trivial task.
 argument-hint: "<task brief>"
 ---
 
-# /parrug - Gate-Green Work Protocol
+# /parrug
 
-Read the installed skill SoT first:
+Read and follow the installed skill SoT:
 
 ```text
 SKILL.md
 ```
 
-Use it as binding behavior.
+Deep spec (if needed): `docs/protocol.md`
 
-## Invocation
-
-```text
-/parrug <task brief>
-```
-
-Arguments from the user:
+## Arguments
 
 ```text
 $ARGUMENTS
 ```
 
-Treat the arguments as the task brief unless the user explicitly asks for a
-prompt, prompt pack, handoff, restart prompt, or copy-paste artifact.
+Treat as the task brief unless the user explicitly asks for a handoff or
+restart prompt.
 
-## Default Behavior
+## Behavior
 
-Run the current task through PARRUG:
+1. Run `Plan -> Act -> Review -> Refine -> Until Gate-Green`.
+2. Close with mandatory evidence block (see `SKILL.md`).
+3. Use task templates from `templates/` when they fit.
+4. Optional runtime setup: `docs/adapters.md`.
 
-```text
-Plan -> Act -> Review -> Refine -> Until Gate-Green
-```
-
-Use available Superpowers skills and real worker/subagent tooling when they fit
-the task. Do not expose raw worker prompts or raw reviewer output. If the
-runtime lacks a required worker/subagent capability, report the tooling blocker
-instead of pretending workers ran.
-
-## Handoff Prompt Behavior
-
-Only when explicitly requested, produce a copy-paste-ready English handoff prompt
-based on:
-
-- `templates/session-prompt.md`;
-- `references/foundations.md`;
-- the user's task brief;
-- verified local or current-source facts needed to make the prompt safe.
-
-In that mode, output the prompt in chat by default and do not execute the target
-task unless the user separately asks for execution.
+Handoff prompt mode: only on explicit request → `templates/session-prompt.md`.
 
 ## Output
 
-For normal work, return the integrated result only:
+Integrated result only (no raw worker output):
 
-1. **Current Decision**
-2. **What Was Checked**
-3. **Integrated Result**
-4. **Evidence**
-5. **Open Questions**
-6. **Next Action or Blocker**
+1. Current Decision
+2. What Was Checked
+3. Integrated Result
+4. Evidence
+5. Open Questions
+6. Next Action or Blocker
