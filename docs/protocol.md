@@ -146,10 +146,13 @@ or newly discovered in-scope blocker.
 
 Stop and report blocker when encountering:
 
-- missing permission for PII, secrets, provider/admin writes, legal/billing,
-  payment, production deploy, or public-live claim;
-- destructive VCS operations without explicit approval;
-- dependency or runtime configuration changes without explicit approval;
+- missing permission for PII, secrets, provider/admin writes, legal action,
+  live billing, money movement, production deploy, or public-live claim;
+- history-rewriting or destructive VCS operations without explicit approval;
+  contained branch/worktree cleanup is allowed after integration proof;
+- global toolchain/provider/runtime changes without explicit approval; a
+  minimal justified repo dependency is allowed when manifest, lockfile and
+  relevant checks are included;
 - unclear ownership of deletion, migration, or irreversible cleanup;
 - ambiguous scope unresolvable from local sources;
 - missing worker tooling where autonomous workers are required;

@@ -117,10 +117,13 @@ Evidence:
 
 Stop and report blocker when you hit:
 
-- missing permission for PII, secrets, provider/admin writes, legal/billing,
-  payment, production deploy, or public-live claim;
-- destructive VCS ops without explicit approval;
-- dependency or runtime config changes without explicit approval;
+- missing permission for PII, secrets, provider/admin writes, legal action,
+  live billing, money movement, production deploy, or public-live claim;
+- history-rewriting or destructive VCS ops without explicit approval; contained
+  branch/worktree cleanup is allowed after integration proof;
+- global toolchain/provider/runtime changes without explicit approval; a
+  minimal justified repo dependency is allowed when manifest, lockfile and
+  relevant checks are included;
 - unclear ownership of deletion, migration, or irreversible cleanup;
 - ambiguous scope unresolvable from local sources;
 - verification failure after refinement budget exhausted;

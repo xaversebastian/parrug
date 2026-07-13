@@ -35,6 +35,8 @@ Run before tagging or announcing a PARRUG release. No special runtime required.
 
 - [ ] All internal `docs/` links in README resolve.
 - [ ] GitHub URL in README matches repository.
+- [ ] Active package surfaces contain no private absolute workspace paths,
+  customer paths, credentials, or MFC-brand assumptions.
 
 ## Example
 
