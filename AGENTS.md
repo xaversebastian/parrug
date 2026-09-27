@@ -1,70 +1,63 @@
-# AGENTS.md — PARRUG
+# AGENTS.md: PARRUG
 
 Tool-agnostisches Repo-Overlay für das öffentliche, runtime-neutrale
 Gate-Green-Protokoll. In einem übergeordneten Workspace gelten zusätzlich die
 dort gefundenen `AGENTS.md`; ein Standalone-Clone funktioniert ausschließlich
 mit dieser Datei und enthält keine privaten Workspace-Annahmen.
 
-<!-- CORE:start (generiert via sync-instructions.mjs, NICHT editieren) -->
+<!-- CORE:start (eigenständig gepflegt, kein Generator) -->
 # Workspace Core: gemeinsame Agentenregeln
 
-Zweck: Ein tool-agnostischer Vertrag für autonome, scope-sichere Arbeit. Repo-
-und Tool-Overlays ergänzen nur konkrete Stack-, Brand-, Daten-, Deployment- oder
-Runtime-Grenzen und widersprechen diesem Core nicht.
+Zweck: Ein tool-agnostischer Vertrag für autonome Arbeit. Repo- und
+Tool-Overlays ergänzen nur konkrete Stack-, Daten-, Deployment- oder
+Runtime-Fakten, widersprechen diesem Core nicht und fügen keine neue Rückfrage
+hinzu.
 
 ## Autonomie und Planung
 
-- Native Agenten dürfen klar zugewiesene Aufgaben vollständig erledigen:
-  lesen, editieren, prüfen, begründete Dependencies samt Lockfile ändern,
-  atomar committen, normale nicht-produktive Pushes ausführen, integrieren und
-  nach bewiesener Integration eigene Branches/Worktrees aufräumen.
+- Agenten erledigen Aufgaben vollständig: lesen, editieren, prüfen,
+  begründete Dependencies samt Lockfile ändern, atomar committen, pushen,
+  integrieren und eigene Branches/Worktrees aufräumen.
+- Reversible Arbeit läuft ohne Rückfrage. Rückfrage nur bei unwiderruflicher
+  Löschung, Kosten und Versand nach außen oder rechtsverbindlichen
+  Handlungen.
 - Der Orchestrator zerlegt Arbeit, koordiniert Abhängigkeiten und verifiziert
   den Abschluss; er ist nicht der einzige zulässige Editor oder Git-Akteur.
 - Nicht-triviale Arbeit bekommt einen knappen internen Plan mit konkreten
-  Checks. Reversible lokale Arbeit benötigt keine zusätzliche Planfreigabe.
+  Checks. Reversible Arbeit braucht keine Planfreigabe.
 - Spezialisierte Rollen dürfen ausdrücklich enger sein, etwa Review-only oder
-  Draft-only. Diese Rollengrenze wird nicht zum globalen Native-Default.
+  Draft-only. Diese Rollengrenze wird nicht zum globalen Default.
 
 ## Scope, Parallelität und Dirty State
 
 - Parallele Writer arbeiten in unterschiedlichen Repos oder getrennten
   Worktrees desselben Repos. Pro Worktree gibt es genau einen Writer.
-- Jede schreibende Aufgabe hat Baseline, Read-/Owned-/Forbidden-Paths,
-  erlaubte Aktionen, Verifikationsplan und strukturiertes Ergebnis-Receipt.
-- Ein dirty Repo ist kein pauschales Stop-Gate. Gestoppt wird nur bei
-  Schreibdrift, Owned-Path-Überlappung, ungeklärter Eigentümerschaft oder
-  drohendem Verlust fremder Änderungen.
-- Disjunkte fremde Änderungen bleiben unangetastet. Bei fremdem Dirt ist ein
-  isolierter Worktree der Standard, sofern der bestehende Worktree nicht
-  ausdrücklich der Aufgabe gehört.
+- Ein dirty Repo ist kein Stop. Fremde uncommitted Änderungen werden nicht
+  überschrieben, gestaget, reformatiert oder verworfen; droht ihr Verlust,
+  gilt das als unwiderrufliche Löschung und wird rückgefragt.
+- Das Ergebnis nennt geänderte Pfade, gelaufene Checks und offene Risiken.
 
 ## Git und reversible Entwicklung
 
-- Topologie folgt Scope und Risiko: seriell im zugewiesenen Checkout, parallel
-  im eigenen Branch/Worktree. Es gibt keinen pauschalen Main- oder Branch-Zwang.
-- Normale Commits, nicht-produktive Pushes und konfliktfreie Integration sind
-  erlaubt, wenn sie zum Auftrag gehören und der Zielstand verifiziert ist.
-- Cleanup ist nur für eigene, saubere Worktrees und nachweislich enthaltene
-  Branches erlaubt: Ziel-Commit verifizieren, Worktree entfernen, Branch mit
+- Solo-Default: direkt auf `main`. Ein eigener Branch oder Worktree entsteht
+  nur für einen echten parallelen zweiten Writer.
+- Commit, Push, Merge und Deploy sind normale Arbeitsschritte.
+- Aufräumen: eigene, saubere Worktrees entfernen und enthaltene Branches mit
   normalem `git branch -d` löschen.
-- Kein Force-Push, `--no-verify`, verlustbehafteter Hard-Reset, History-Rewrite
-  oder erzwungene Branch-Löschung ohne explizite menschliche Freigabe.
-- Ein Push mit nachgewiesenem automatischem Production-Deploy ist ein Deploy.
-  Unbekannte Push-Wirkung wird vor dem Push klassifiziert.
+- Force-Push, History-Rewrite, verlustbehafteter Hard-Reset und erzwungene
+  Branch-Löschung sind unwiderrufliche Löschung und werden rückgefragt.
 
 ## Sicherheit und externe Wirkung
 
-- Secrets, Kunden-PII, private Rohdaten und Cross-Brand-Daten werden weder
-  unautorisiert gelesen noch ausgegeben, übertragen oder committed.
-- Menschliche Gates bleiben für irreversible Datenlöschung, produktive DB-
-  Migrationen, produktive Auth-/RLS-/Payment-Rollouts, Live-Billing oder
-  Geldbewegungen, rechtsverbindliche Handlungen, Kunden-/öffentliche
-  Kommunikation sowie Production-/Provider-/DNS-Writes bestehen.
-- Lokales Schreiben und Testen von Auth-, RLS-, Payment- und Migrationscode ist
-  erlaubt. Der Gate betrifft die produktive oder irreversible Wirkung.
-- Notwendige Dependencies sind mit Begründung, Owned-Manifest und geprüftem
-  Lockfile erlaubt. Publish oder externe Registry-/Provider-Writes bleiben
-  gesondert gegatet.
+- Secrets werden nicht gelesen; Secret-Werte, Kunden-PII und private Rohdaten
+  kommen nie in Git, Logs oder Ausgaben.
+- Rückfrage nur in drei Fällen: unwiderrufliche Löschung, Geld und laufende
+  Kosten, Versand an Menschen außerhalb oder rechtsverbindliche Handlungen.
+  Alles andere, auch Provider-, Publish- und Deploy-Schreibvorgänge, ist
+  reversible Arbeit ohne Rückfrage.
+- Secret-Scan und Tests werden nicht umgangen oder geschwächt.
+- Notwendige Dependencies sind mit Begründung, Manifest und geprüftem Lockfile
+  erlaubt.
 
 ## Risikoproportionale Verifikation
 
